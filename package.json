@@ -1,0 +1,17 @@
+{
+  "name": "tech_track",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Rick Groot",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "jquery": "^3.5.1",
+    "jsdom": "^16.4.0",
+    "node": "^14.14.0",
+    "node-fetch": "^2.6.1"
+  }
+}
