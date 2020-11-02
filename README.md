@@ -1,5 +1,5 @@
-# Functional Programming
-A repository for Functional Programming, subject of the Information Design semester of CMD.
+# Frontend Data
+A repository for Frontend Data, subject of the Information Design semester of CMD.
 
 # Student information
 ```javascript
