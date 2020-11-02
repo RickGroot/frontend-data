@@ -1,14 +1,3 @@
-//Source used: Live coding API by Laurens Aarnoudse
-const fetch = require('node-fetch'); //requires fetch library for node.js
-const d3 = require("d3");
-const express = require('express');         //use express to render stuff
-const app = express();
-const port = 8080;                          //set up a localhost port
-const jsdom = require("jsdom");
-const { JSDOM } = jsdom;
-const dom = new JSDOM(`<!DOCTYPE html><p>Hello world</p>`);
-const { document } = (new JSDOM(`...`)).window;
-
 const endpoint = 'https://opendata.rdw.nl/resource/b3us-f26s.json?$limit=90000'; //specificaties parkeergebied dataset
 const endpoint2 = 'https://opendata.rdw.nl/resource/t5pc-eb34.json?$limit=90000'; //GEO Parkeer Garages dataset
 const selectedColumn = 'maximumvehicleheight';
@@ -50,7 +39,7 @@ let data2 = getData(endpoint2) //calls function getData with API link
 
 let cleanedDataObjects = compare(data1, data2)      //calls compare function, and logs result when ready
 .then(result => {     
-    // console.log(result);
+    console.log(result);
     return result;
 }); 
 
@@ -104,19 +93,31 @@ async function compare(array1, array2) { //async function that awaits the promis
 
 
 //D3 code
-d3.select("body").transition()
-.style("background-color", "black");
+var svg = d3.select("svg"),
+    width = 400,
+    height = 300;
 
+// Map and projection
+var projection = d3.geoMercator()
+    .center([4, 52.3])                // GPS of location to zoom on
+    .scale(3500)                       // This is like the zoom
+    .translate([ width/2, height/2 ])
 
-//Express server setup
-app
-    .set('view engine', 'ejs')              //initialize ejs
-    .use(express.static('./static'))        //initialize static folder
-    .use('/', home);                        //call function home() when on localhost
+// Load external data and boot
+d3.json("https://www.webuildinternet.com/articles/2015-07-19-geojson-data-of-the-netherlands/townships.geojson", function(data){
 
-async function home(req, res, next) {       //async function, it needs to wait for data
-    let renderData = await cleanedDataObjects;
-    res.render('index.ejs', {data: renderData});    //renders clean.ejs, with the data from allHobbies array
-}
+    // Filter data
+    // data.features = data.features.filter(function(d){console.log(d.properties.name) ; return d.properties.name=="Hoorn"})
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`));  //puts rendered data at localhost:8080/clean
+    // Draw the map
+    svg.append("g")
+        .selectAll("path")
+        .data(data.features)
+        .enter()
+        .append("path")
+          .attr("fill", "grey")
+          .attr("d", d3.geoPath()
+              .projection(projection)
+          )
+        .style("stroke", "black")
+})
