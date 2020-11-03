@@ -37,11 +37,12 @@ let data2 = getData(endpoint2) //calls function getData with API link
         // return filteredDataObjects2;
     })
 
-let cleanedDataObjects = compare(data1, data2)      //calls compare function, and logs result when ready
-.then(result => {     
-    console.log(result);
-    return result;
-}); 
+let cleanedDataObjects = compare(data1, data2) //calls compare function, and logs result when ready
+    .then(result => {
+        // console.log(result);
+        mapThings(result)
+        return result;
+    });
 
 
 function getData(url) {
@@ -61,19 +62,19 @@ function filterObjectName(dataArray, key) {
 }
 
 async function compare(array1, array2) { //async function that awaits the promised arrays
-    const result1 = await array1;       //waits for incoming data
+    const result1 = await array1; //waits for incoming data
     const result2 = await array2;
     let compiled = [];
 
-    result1.forEach(itemArr1 => {       //loops over each item in result1
-        
-        result2.forEach(itemArr2 => {   //loops over each item in result2 to check same area id's
-            
-            if (itemArr1.areaid === itemArr2.areaid) {  
+    result1.forEach(itemArr1 => { //loops over each item in result1
 
-                let location = [itemArr2.location.latitude, itemArr2.location.longitude];   //saves location to an array
+        result2.forEach(itemArr2 => { //loops over each item in result2 to check same area id's
 
-                compiled.push({             //pushes an object into array 'compiled'
+            if (itemArr1.areaid === itemArr2.areaid) {
+
+                let location = [parseFloat(itemArr2.location.longitude), parseFloat(itemArr2.location.latitude)]; //saves location to an array
+
+                compiled.push({ //pushes an object into array 'compiled'
                     areamanagerId: itemArr1.areamanagerid,
                     areaId: itemArr1.areaid,
                     capacity: itemArr1.capacity,
@@ -99,13 +100,13 @@ var svg = d3.select("svg"),
 
 // Map and projection
 var projection = d3.geoMercator()
-    .center([4, 52.3])                // GPS of location to zoom on
-    .scale(3500)                       // This is like the zoom
-    .translate([ width/2, height/2 ])
+    .center([2, 52.7]) // GPS of location to zoom on
+    .scale(8000) // This is like the zoom
+// .translate([ width/1, height/2 ])
 
 // Load external data and boot
-d3.json("https://www.webuildinternet.com/articles/2015-07-19-geojson-data-of-the-netherlands/townships.geojson", function(data){
-
+d3.json("https://gist.githubusercontent.com/larsbouwens/1afef9beb0c3df0e4b24/raw/5ed7eb4517eee5737a4cb4551558e769ed8da41a/nl.json", function (data) {
+    //provinces.gejson or townships.geojson
     // Filter data
     // data.features = data.features.filter(function(d){console.log(d.properties.name) ; return d.properties.name=="Hoorn"})
 
@@ -115,9 +116,26 @@ d3.json("https://www.webuildinternet.com/articles/2015-07-19-geojson-data-of-the
         .data(data.features)
         .enter()
         .append("path")
-          .attr("fill", "grey")
-          .attr("d", d3.geoPath()
-              .projection(projection)
-          )
+        .attr("fill", "grey")
+        .attr("d", d3.geoPath()
+            .projection(projection)
+        )
         .style("stroke", "black")
 })
+
+function mapThings(object) {
+    svg.selectAll('circle')
+        .data(object)
+        .enter().append('circle')
+        .attr('cx', function (d) {
+            return projection(d.location)[0];
+        })
+        .attr("cy", function (d) {
+            return projection(d.location)[1];
+        })
+        .attr("r", 14)
+        .style("fill", "pink")
+        .attr("stroke", "white")
+        .attr("stroke-width", 3)
+
+}
