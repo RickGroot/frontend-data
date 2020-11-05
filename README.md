@@ -22,7 +22,6 @@ Are parking garages in The Netherlands high enough for people on vacation.
 In which area's are more low parking garages?  
 Are there many parking garages outside cities?  
 
-
 ## Required variables
 * ID of parking space
 * Location of parking garages
