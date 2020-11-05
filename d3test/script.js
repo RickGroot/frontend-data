@@ -77,7 +77,7 @@ async function compare(array1, array2) { //async function that awaits the promis
                 compiled.push({ //pushes an object into array 'compiled'
                     areamanagerId: itemArr1.areamanagerid,
                     areaId: itemArr1.areaid,
-                    capacity: itemArr1.capacity,
+                    capacity: parseFloat(itemArr1.capacity),        //parseFloat() turns a string containing a number to a number type
                     chargingpointCapacity: itemArr1.chargingpointcapacity,
                     disabledAccess: itemArr1.disabledaccess,
                     maximumVehicleHeight: itemArr1.maximumvehicleheight,
@@ -94,48 +94,35 @@ async function compare(array1, array2) { //async function that awaits the promis
 
 
 //D3 code
-var svg = d3.select("svg"),
-    width = 400,
-    height = 300;
+let svg = d3.select("svg")
 
 // Map and projection
-var projection = d3.geoMercator()
+let projection = d3.geoMercator()
     .center([2, 52.7]) // GPS of location to zoom on
     .scale(8000) // This is like the zoom
-// .translate([ width/1, height/2 ])
+// .translate([ width/2, height/2 ])
+
+let path = d3.geoPath(projection)
 
 // Load external data and boot
 d3.json("https://gist.githubusercontent.com/larsbouwens/1afef9beb0c3df0e4b24/raw/5ed7eb4517eee5737a4cb4551558e769ed8da41a/nl.json", function (data) {
     //provinces.gejson or townships.geojson
-    // Filter data
-    // data.features = data.features.filter(function(d){console.log(d.properties.name) ; return d.properties.name=="Hoorn"})
-
+    
     // Draw the map
-    svg.append("g")
+    svg.select("g")
         .selectAll("path")
         .data(data.features)
-        .enter()
-        .append("path")
+        .enter().append("path")
         .attr("fill", "grey")
-        .attr("d", d3.geoPath()
-            .projection(projection)
-        )
+        .attr("d", path)
         .style("stroke", "black")
 })
 
-function mapThings(object) {
+function mapThings(object) {        //gets called when data is ready
     svg.selectAll('circle')
         .data(object)
         .enter().append('circle')
-        .attr('cx', function (d) {
-            return projection(d.location)[0];
-        })
-        .attr("cy", function (d) {
-            return projection(d.location)[1];
-        })
-        .attr("r", 14)
-        .style("fill", "pink")
-        .attr("stroke", "white")
-        .attr("stroke-width", 3)
-
+        .attr('cx', d => { return projection(d.location)[0]; } )
+        .attr("cy", d => { return projection(d.location)[1]; } )
+        .attr("r", d => { return d.capacity/100; } )
 }

@@ -1,13 +1,13 @@
 //Source used: Live coding API by Laurens Aarnoudse
 const fetch = require('node-fetch'); //requires fetch library for node.js
-const d3 = require("d3");
+// const d3 = require("d3");
 const express = require('express');         //use express to render stuff
 const app = express();
 const port = 8080;                          //set up a localhost port
-const jsdom = require("jsdom");
-const { JSDOM } = jsdom;
-const dom = new JSDOM(`<!DOCTYPE html><p>Hello world</p>`);
-const { document } = (new JSDOM(`...`)).window;
+// const jsdom = require("jsdom");
+// const { JSDOM } = jsdom;
+// const dom = new JSDOM(`<!DOCTYPE html><p>Hello world</p>`);
+// const { document } = (new JSDOM(`...`)).window;
 
 const endpoint = 'https://opendata.rdw.nl/resource/b3us-f26s.json?$limit=90000'; //specificaties parkeergebied dataset
 const endpoint2 = 'https://opendata.rdw.nl/resource/t5pc-eb34.json?$limit=90000'; //GEO Parkeer Garages dataset
@@ -104,8 +104,8 @@ async function compare(array1, array2) { //async function that awaits the promis
 
 
 //D3 code
-d3.select("body").transition()
-.style("background-color", "black");
+// d3.select("body").transition()
+// .style("background-color", "black");
 
 
 //Express server setup
