@@ -16,12 +16,11 @@ let ID_info = {
 ```
 
 # Research topic
-Where can or cannot be parked with a van in different parking garages in the Netherlands?
+Are parking garages in The Netherlands high enough for people on vacation.
 
 ## Sub-topics
 In which area's are more low parking garages?  
 Are there many parking garages outside cities?  
-
 
 ## Required variables
 * ID of parking space
@@ -33,9 +32,10 @@ Are there many parking garages outside cities?
 All this data is from RDW datasets. For location of parking garages I use [GEO Parkeer Garages](https://opendata.rdw.nl/Parkeren/GEO-Parkeer-Garages/t5pc-eb34), and for capacity and maximumvehicleheight I use [Open Data Parkeren: SPECIFICATIES PARKEERGEBIED](https://opendata.rdw.nl/Parkeren/Open-Data-Parkeren-SPECIFICATIES-PARKEERGEBIED/b3us-f26s). The datasets I am going to use for the car data are still unknown.
 
 ## Expectations
-I think that lots of parking garages are perfectly compatible with most cars. If you have a van there could be a problem in some parking garages, because the garages are often too low for big vehicles to enter.
+I think that lots of parking garages are perfectly compatible with most cars. But if you are on a vacation there could be a problem with some garages. I think that people with a roof box, or people who travel long distances in a travel van could be in trouble with some parking garages, because these vehicles are often higher.
+
 ### Sub-topic expectations
-I think there are more low parking garages in the older cities, because back then they would not have thought of really high vehicles. I also think there won't be many parking garages outside cities, because there is no need for them, and there is more space for regular parking lots.
+I think there are more low parking garages in older cities, because back then they might not have thought of taller vehicles. I also think there won't be many parking garages outside cities, because there is no need for them, and there is more space for regular parking lots.
 
 # Concept
 A map with all parking garages, with information about capacity and maximum vehicle heights. You can also filter the garages by filtering on your car height or car type.
