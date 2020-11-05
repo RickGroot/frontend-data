@@ -19,8 +19,8 @@ svg {
 }
 
 circle {
-    fill: pink;
-    stroke: white;
+    fill: rgb(56, 232, 255);
+    stroke: rgb(39, 39, 39);
     stroke-width: 1;
     z-index: 10;
 }
