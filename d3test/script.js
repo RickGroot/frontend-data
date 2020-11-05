@@ -77,7 +77,7 @@ async function compare(array1, array2) { //async function that awaits the promis
                 compiled.push({ //pushes an object into array 'compiled'
                     areamanagerId: itemArr1.areamanagerid,
                     areaId: itemArr1.areaid,
-                    capacity: parseFloat(itemArr1.capacity),        //parseFloat() turns a string containing a number to a number type
+                    capacity: parseFloat(itemArr1.capacity), //parseFloat() turns a string containing a number to a number type
                     chargingpointCapacity: itemArr1.chargingpointcapacity,
                     disabledAccess: itemArr1.disabledaccess,
                     maximumVehicleHeight: itemArr1.maximumvehicleheight,
@@ -94,35 +94,54 @@ async function compare(array1, array2) { //async function that awaits the promis
 
 
 //D3 code
-let svg = d3.select("svg")
+let mapSVG = d3.select("#map")
 
 // Map and projection
-let projection = d3.geoMercator()
+let mapProjection = d3.geoMercator()
     .center([2, 52.7]) // GPS of location to zoom on
     .scale(8000) // This is like the zoom
 // .translate([ width/2, height/2 ])
 
-let path = d3.geoPath(projection)
+let mapPath = d3.geoPath(mapProjection)
 
 // Load external data and boot
 d3.json("https://gist.githubusercontent.com/larsbouwens/1afef9beb0c3df0e4b24/raw/5ed7eb4517eee5737a4cb4551558e769ed8da41a/nl.json", function (data) {
-    //provinces.gejson or townships.geojson
-    
+
     // Draw the map
-    svg.select("g")
+    mapSVG.select("g")
         .selectAll("path")
         .data(data.features)
         .enter().append("path")
         .attr("fill", "grey")
-        .attr("d", path)
+        .attr("d", mapPath)
         .style("stroke", "black")
 })
 
-function mapThings(object) {        //gets called when data is ready
-    svg.selectAll('circle')
+function mapThings(object) { //gets called when data is ready
+    mapSVG.selectAll('circle')
         .data(object)
         .enter().append('circle')
-        .attr('cx', d => { return projection(d.location)[0]; } )
-        .attr("cy", d => { return projection(d.location)[1]; } )
-        .attr("r", d => { return d.capacity/100; } )
+        .attr('cx', d => {
+            return mapProjection(d.location)[0];
+        }) //adds location from data object
+        .attr("cy", d => {
+            return mapProjection(d.location)[1];
+        })
+        .attr("r", d => {
+            return calculateRadius(d.capacity);
+        }) //calls function to calculate radius
+}
+
+function calculateRadius(capacity) { //function that calculates the radius of a bubble on the bubble map
+    let radius;
+    if (capacity > 1000) {
+        radius = 10;
+    } else if (capacity < 1000 && capacity > 700) {
+        radius = 8;
+    } else if (capacity < 700 && capacity > 500) {
+        radius = 6;
+    } else {
+        radius = 4;
+    }
+    return (radius);
 }
