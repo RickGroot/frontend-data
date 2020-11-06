@@ -1,30 +1,39 @@
 body {
-    background-color:#000240;
+    font-family: 'Lora', serif;
+    margin: 0;
+    padding: 0;
+}
+
+article {
+    width: 60vw;
+    max-width: 1200px;
+    min-width: 500px;
+    margin: 0 auto;
+    border: 2px solid black;
 }
 
 h1 {
     font-size: 3em;
-    margin: 5%;
-    color: white;
+    margin-top: 5vh;
+    font-weight: 600;
 }
 
-svg {
-    position: absolute;
-    height: 100vh;
-    width: 100vw;
+svg#map {
+    height: 600px;
+    width: 100%;
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
 }
 
-circle {
+#map path {
+    fill: grey;
+    stroke: black;
+}
+
+#map circle {
     fill: rgb(56, 232, 255);
     stroke: rgb(39, 39, 39);
     stroke-width: 1;
-    z-index: 10;
-}
-
-g {
-    z-index: -1;
 }

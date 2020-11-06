@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>D3 thing</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script src="https://d3js.org/d3.v4.js"></script>
     <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
@@ -11,9 +13,21 @@
     <script src="https://d3js.org/d3-array.v2.min.js"></script>
     <script src="https://d3js.org/d3-geo.v2.min.js"></script>
 </head>
+
 <body>
-    <h1>Parkeergarages in Nederland</h1>
-    <svg id="map"><g></g></svg>
+    <article>
+        <h1>Parkeergarages op vakantie</h1>
+        <p>je hebt het allemaal wel eens, pas ik nou wel of niet in die perkeergarage? Vaak als je met een dakkoffer
+            rijd weet je niet precies waar je wel en niet terecht kan. Hoe het zit met de hoogtes van parkeergarages
+            voor vakantiegangers heb ik hier even kort duidelijk gemaakt.</p>
+        <svg id="bar"></svg>
+        <p>Wil je weten in welke parkeergarages jij kan parkeren in Nederland? Belijk dit dan snel in de map hieronder!</p>
+        <svg id="map">
+            <g></g>
+        </svg>
+    </article>
+
     <script src="script.js"></script>
 </body>
+
 </html>

@@ -3,7 +3,6 @@ const endpoint2 = 'https://opendata.rdw.nl/resource/t5pc-eb34.json?$limit=90000'
 const selectedColumn = 'maximumvehicleheight';
 const selectedColumn2 = 'usageid';
 
-
 let data1 = getData(endpoint) //calls function getData with API link
     .then(result => { //only continues when data is fetched
         return result.json()
@@ -94,12 +93,12 @@ async function compare(array1, array2) { //async function that awaits the promis
 
 
 //D3 code
-let mapSVG = d3.select("#map")
+let mapSVG = d3.select("#map");
 
 // Map and projection
 let mapProjection = d3.geoMercator()
-    .center([2, 52.7]) // GPS of location to zoom on
-    .scale(8000) // This is like the zoom
+    .center([5.66, 52.40]) // GPS of location to zoom on
+    .scale(7500) // This is like the zoom
 // .translate([ width/2, height/2 ])
 
 let mapPath = d3.geoPath(mapProjection)
@@ -112,9 +111,7 @@ d3.json("https://gist.githubusercontent.com/larsbouwens/1afef9beb0c3df0e4b24/raw
         .selectAll("path")
         .data(data.features)
         .enter().append("path")
-        .attr("fill", "grey")
         .attr("d", mapPath)
-        .style("stroke", "black")
 })
 
 function mapThings(object) { //gets called when data is ready
