@@ -1,7 +1,6 @@
-const endpoint = 'https://opendata.rdw.nl/resource/b3us-f26s.json?$limit=90000'; //specificaties parkeergebied dataset
-const endpoint2 = 'https://opendata.rdw.nl/resource/t5pc-eb34.json?$limit=90000'; //GEO Parkeer Garages dataset
-const selectedColumn = 'maximumvehicleheight';
-const selectedColumn2 = 'usageid';
+//local server command: python -m http.server
+
+import { endpoint, endpoint2, selectedColumn, selectedColumn2 } from './modules/data.js';
 
 let data1 = getData(endpoint) //calls function getData with API link
     .then(result => { //only continues when data is fetched
