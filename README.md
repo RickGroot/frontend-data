@@ -38,7 +38,8 @@ I think that lots of parking garages are perfectly compatible with most cars. Bu
 I think there are more low parking garages in older cities, because back then they might not have thought of taller vehicles. I also think there won't be many parking garages outside cities, because there is no need for them, and there is more space for regular parking lots.
 
 # Concept
-A map with all parking garages, with information about capacity and maximum vehicle heights. You can also filter the garages by filtering on your car height or car type.
+A map with all parking garages, with information about capacity and maximum vehicle heights. You can also filter the garages by filtering on your car height or car type.    
+![](https://github.com/Rickert41/frontend-data/blob/main/utils/sketch4.jpeg)
 
 ## License
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
