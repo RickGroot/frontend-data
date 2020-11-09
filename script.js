@@ -1,6 +1,14 @@
 //local server command: python -m http.server
-import { endpoint, endpoint2, selectedColumn, selectedColumn2 } from './modules/endpoint.js';
-import { compare } from './modules/array.js';
+//import modules
+import {
+    endpoint,
+    endpoint2,
+    selectedColumn,
+    selectedColumn2
+} from './modules/endpoint.js';
+import {
+    compare
+} from './modules/array.js';
 
 let data1 = getData(endpoint) //calls function getData with API link
     .then(result => { //only continues when data is fetched
@@ -70,18 +78,29 @@ let mapProjection = d3.geoMercator()
 
 let mapPath = d3.geoPath(mapProjection)
 
-// Load external data and boot
-d3.json("https://gist.githubusercontent.com/larsbouwens/1afef9beb0c3df0e4b24/raw/5ed7eb4517eee5737a4cb4551558e769ed8da41a/nl.json", function (data) {
+let tooltip = d3.select('body')
+    .append('div')
+    .attr('class', 'tooltip')
+    .style("opacity", 0)
 
-    // Draw the map
-    mapSVG.select("g")
-        .selectAll("path")
-        .data(data.features)
-        .enter().append("path")
-        .attr("d", mapPath)
-})
+// Load external data and boot
+function loadMap() {
+    d3.json("https://gist.githubusercontent.com/larsbouwens/1afef9beb0c3df0e4b24/raw/5ed7eb4517eee5737a4cb4551558e769ed8da41a/nl.json", data => {
+
+        // Draw the map
+        mapSVG.select("g")
+            .selectAll("path")
+            .data(data.features)
+            .enter().append("path")
+            .attr("d", mapPath)
+    })
+}
+
+window.onload = loadMap(); //loads the map after the page is loaded
 
 function mapThings(object) { //gets called when data is ready
+
+
     mapSVG.selectAll('circle')
         .data(object)
         .enter().append('circle')
@@ -94,6 +113,9 @@ function mapThings(object) { //gets called when data is ready
         .attr("r", d => {
             return calculateRadius(d.capacity);
         }) //calls function to calculate radius
+        .on("mouseover", mouseOver)
+        // .on("mousemove", mouseMove)
+        .on("mouseout", mouseOut)
 }
 
 function calculateRadius(capacity) { //function that calculates the radius of a bubble on the bubble map
@@ -108,4 +130,41 @@ function calculateRadius(capacity) { //function that calculates the radius of a 
         radius = 4;
     }
     return (radius);
+}
+
+function mouseOver(d, i) { //add interactivity
+
+    d3.select(this).transition()    //set transition for circle
+        .duration('50')
+        .attr('opacity', .6);
+
+    tooltip.transition()            //set transition for tooltip
+        .duration('50')
+        .style('opacity', 1);
+
+    tooltip.html(d.areaDesc);  //text of the tooltip
+        
+    tooltip.style('left', (d3.event.pageX + 10) + 'px') //position of the tooltip
+        .style('top', (d3.event.pageY + 10) + 'px');
+
+
+}
+
+// function mouseMove(d) {
+//     tooltip
+//         .html(d.areaDesc)
+//         .style("left", (d3.mouse(this)[0] + 10) + "px")
+//         .style("top", (d3.mouse(this)[1]) + "px")
+// }
+
+function mouseOut(d) { //sets hover back when not hovering
+
+    d3.select(this).transition()
+        .duration('50')
+        .attr('opacity', '1');
+
+    tooltip.transition()
+        .duration('50')
+        .style("opacity", 0);
+
 }

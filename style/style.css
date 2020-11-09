@@ -37,3 +37,12 @@ svg#map {
     stroke: rgb(39, 39, 39);
     stroke-width: 1;
 }
+
+.tooltip {
+    position: absolute;
+    padding: 10px;
+    border-radius: 3px;
+    background-color: rgb(51, 51, 51);
+    color: rgb(255, 255, 255);
+    font-size: 0.8em;
+}
