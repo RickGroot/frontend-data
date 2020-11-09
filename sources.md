@@ -13,3 +13,5 @@ Ferdinandi, C. (2017, 6 november). Converting strings to numbers with vanilla Ja
 Schmidt, K. J. (2020, 26 mei). Show data on mouse-over with d3.js - KJ Schmidt. Medium. https://medium.com/@kj_schmidt/show-data-on-mouse-over-with-d3-js-3bf598ff8fc2
 
 Holtz, Y. (2018). Bubblemap with tooltip in d3.js. D3.js graph gallery. https://www.d3-graph-gallery.com/graph/bubblemap_tooltip.html
+
+Simple tooltips in v6. (2020, 14 september). bl.ocks.org. https://bl.ocks.org/d3noob/180287b6623496dbb5ac4b048813af52

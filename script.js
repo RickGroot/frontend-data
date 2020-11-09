@@ -9,6 +9,12 @@ import {
 import {
     compare
 } from './modules/array.js';
+import {
+    mapSVG,
+    mapProjection,
+    mapPath,
+    tooltip
+} from './modules/mapConst.js';
 
 let data1 = getData(endpoint) //calls function getData with API link
     .then(result => { //only continues when data is fetched
@@ -68,27 +74,12 @@ function filterObjectName(dataArray, key) {
 }
 
 //D3 code
-let mapSVG = d3.select("#map");
-
-// Map and projection
-let mapProjection = d3.geoMercator()
-    .center([5.66, 52.40]) // GPS of location to zoom on
-    .scale(7500) // This is like the zoom
-// .translate([ width/2, height/2 ])
-
-let mapPath = d3.geoPath(mapProjection)
-
-let tooltip = d3.select('body')
-    .append('div')
-    .attr('class', 'tooltip')
-    .style("opacity", 0)
-
 // Load external data and boot
 function loadMap() {
-    d3.json("https://gist.githubusercontent.com/larsbouwens/1afef9beb0c3df0e4b24/raw/5ed7eb4517eee5737a4cb4551558e769ed8da41a/nl.json", data => {
+    d3.json("https://gist.githubusercontent.com/larsbouwens/1afef9beb0c3df0e4b24/raw/5ed7eb4517eee5737a4cb4551558e769ed8da41a/nl.json").then(data => {
 
         // Draw the map
-        mapSVG.select("g")
+        mapSVG.selectAll("g")
             .selectAll("path")
             .data(data.features)
             .enter().append("path")
@@ -114,8 +105,9 @@ function mapThings(object) { //gets called when data is ready
             return calculateRadius(d.capacity);
         }) //calls function to calculate radius
         .on("mouseover", mouseOver)
-        // .on("mousemove", mouseMove)
         .on("mouseout", mouseOut)
+
+        mapSVG.call(d3.zoom().scaleExtent([1 / 8, 24]).on('zoom', onZoom));
 }
 
 function calculateRadius(capacity) { //function that calculates the radius of a bubble on the bubble map
@@ -132,39 +124,34 @@ function calculateRadius(capacity) { //function that calculates the radius of a 
     return (radius);
 }
 
-function mouseOver(d, i) { //add interactivity
+function mouseOver(event, d) { //add interactivity
 
     d3.select(this).transition()    //set transition for circle
         .duration('50')
         .attr('opacity', .6);
 
-    tooltip.transition()            //set transition for tooltip
+    tooltip.transition()                           //set transition for tooltip
         .duration('50')
-        .style('opacity', 1);
+        .style('opacity', 1)
 
     tooltip.html(d.areaDesc);  //text of the tooltip
         
-    tooltip.style('left', (d3.event.pageX + 10) + 'px') //position of the tooltip
-        .style('top', (d3.event.pageY + 10) + 'px');
-
-
+    tooltip.style('left', (event.pageX) + 'px') //position of the tooltip
+        .style('top', (event.pageY + 10) + 'px')
+        .attr('class','focus')
 }
 
-// function mouseMove(d) {
-//     tooltip
-//         .html(d.areaDesc)
-//         .style("left", (d3.mouse(this)[0] + 10) + "px")
-//         .style("top", (d3.mouse(this)[1]) + "px")
-// }
+function mouseOut() { //sets hover back when not hovering
 
-function mouseOut(d) { //sets hover back when not hovering
-
-    d3.select(this).transition()
+    d3.select(this).transition()    //put circle back when not hovering
         .duration('50')
         .attr('opacity', '1');
 
-    tooltip.transition()
+    tooltip.transition()            //hides tooltips
         .duration('50')
         .style("opacity", 0);
+}
 
+function onZoom(event, d) {
+    mapSVG.attr('transform', event.transform);
 }

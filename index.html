@@ -7,7 +7,7 @@
     <title>D3 thing</title>
     <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./style/style.css">
-    <script src="https://d3js.org/d3.v4.js"></script>
+    <script src="https://d3js.org/d3.v6.js"></script>
     <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
     <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
     <script src="https://d3js.org/d3-array.v2.min.js"></script>
@@ -21,9 +21,14 @@
             rijd weet je niet precies waar je wel en niet terecht kan. Hoe het zit met de hoogtes van parkeergarages
             voor vakantiegangers heb ik hier even kort duidelijk gemaakt.</p>
         <svg id="bar"></svg>
-        <p>Wil je weten in welke parkeergarages jij kan parkeren in Nederland? Belijk dit dan snel in de map hieronder!</p>
+        <p>Wil je weten in welke parkeergarages jij kan parkeren in Nederland? Belijk dit dan snel in de map hieronder!
+        </p>
+        <div class="slider">
+            <input type="range" min="150" max="300" value="210" id="slider">
+            <h2>2.10M</h2>
+        </div>
         <svg id="map">
-            
+
             <g></g>
         </svg>
     </article>
