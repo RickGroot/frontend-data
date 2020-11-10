@@ -15,6 +15,12 @@ import {
     mapPath,
     tooltip
 } from './modules/mapConst.js';
+import {
+    getData,
+    filterData,
+    filterObjectName,
+    filterObjectValue
+} from './modules/filterFunctions.js';
 
 let data1 = getData(endpoint) //calls function getData with API link
     .then(result => { //only continues when data is fetched
@@ -53,25 +59,9 @@ let cleanedDataObjects = compare(data1, data2) //calls compare function, and log
     .then(result => {
         // console.log(result);
         mapThings(result)
+        barchart(result)
         return result;
     });
-
-
-function getData(url) {
-    return fetch(url); //fetches data from API url
-}
-
-function filterData(dataArray, key) {
-    return dataArray.map(item => item[key]); //filters column data from array
-}
-
-function filterObjectValue(dataArray, key) {
-    return dataArray.filter(item => item[key] > 0); //returns only objects with a key-value higher than 0
-}
-
-function filterObjectName(dataArray, key) {
-    return dataArray.filter(item => item[key] === 'GARAGEP'); //returns only objects with a key-value higher than 0
-}
 
 //D3 code
 // Load external data and boot
@@ -85,12 +75,19 @@ function loadMap() {
             .enter().append("path")
             .attr("d", mapPath)
     })
+    
+    mapSVG.call(d3.zoom()
+        .scaleExtent([1, 4])    //maximum zooming levels
+        .translateExtent([      //maximum panning levels
+            [-200, -200],
+            [1000, 800]
+        ])
+        .on('zoom', onZoom));   //calls function onZoom
 }
 
 window.onload = loadMap(); //loads the map after the page is loaded
 
 function mapThings(object) { //gets called when data is ready
-
 
     mapSVG.selectAll('circle')
         .data(object)
@@ -104,10 +101,8 @@ function mapThings(object) { //gets called when data is ready
         .attr("r", d => {
             return calculateRadius(d.capacity);
         }) //calls function to calculate radius
-        .on("mouseover", mouseOver)
-        .on("mouseout", mouseOut)
-
-        mapSVG.call(d3.zoom().scaleExtent([1 / 8, 24]).on('zoom', onZoom));
+        .on("mouseover", mouseOver)     //calls function when hovering
+        .on("mouseout", mouseOut)       //calls function when not hovering
 }
 
 function calculateRadius(capacity) { //function that calculates the radius of a bubble on the bubble map
@@ -126,32 +121,132 @@ function calculateRadius(capacity) { //function that calculates the radius of a 
 
 function mouseOver(event, d) { //add interactivity
 
-    d3.select(this).transition()    //set transition for circle
+    d3.select(this).transition() //set transition for circle
         .duration('50')
         .attr('opacity', .6);
 
-    tooltip.transition()                           //set transition for tooltip
+    tooltip.transition() //set transition for tooltip
         .duration('50')
         .style('opacity', 1)
 
-    tooltip.html(d.areaDesc);  //text of the tooltip
-        
+    tooltip.html(d.areaDesc); //text of the tooltip
+
     tooltip.style('left', (event.pageX) + 'px') //position of the tooltip
         .style('top', (event.pageY + 10) + 'px')
-        .attr('class','focus')
+        .attr('class', 'focus');
 }
 
 function mouseOut() { //sets hover back when not hovering
 
-    d3.select(this).transition()    //put circle back when not hovering
+    d3.select(this).transition() //put circle back when not hovering
         .duration('50')
         .attr('opacity', '1');
 
-    tooltip.transition()            //hides tooltips
+    tooltip.transition() //hides tooltips
         .duration('50')
         .style("opacity", 0);
 }
 
 function onZoom(event, d) {
     mapSVG.attr('transform', event.transform);
+}
+
+
+
+//code for bar chart
+//set the dimensions and margins of the graph
+var margin = {
+        top: 20,
+        right: 20,
+        bottom: 30,
+        left: 40
+    },
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+//set the ranges
+var x = d3.scaleBand()
+    .range([0, width])
+    .padding(0.1);
+
+var y = d3.scaleLinear()
+    .range([height, 0]);
+
+//append a 'group' element to 'svg'
+//moves the 'group' element to the top left margin
+var barSVG = d3.select("#bar")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform",
+        "translate(" + margin.left + "," + margin.top + ")");
+
+
+function formatBarData(data) {
+    let extraTall = 0;
+    let tall = 0;
+    let medium = 0;
+    let small = 0;
+    let extraSmall = 0;
+
+    data.forEach(d => {
+        if (d.maximumVehicleHeight > 220) {
+            extraTall++;
+        } else if (d.maximumVehicleHeight > 205 && d.maximumVehicleHeight < 220) {
+            tall++;
+        } else if (d.maximumVehicleHeight > 195 && d.maximumVehicleHeight < 205) {
+            medium++;
+        } else if (d.maximumVehicleHeight > 185 && d.maximumVehicleHeight < 195) {
+            small++;
+        } else if (d.maximumVehicleHeight < 185) {
+            extraSmall++;
+        }
+    })
+
+    let formatData = {
+        '220': extraTall,
+        '205': tall,
+        '195': medium,
+        '185': small,
+        '175': extraSmall
+    }
+
+    barchart(formatData)
+}
+
+//gets called when the data is collected
+function barchart(data) {
+
+    //scale the range of the data in the domains
+    x.domain(data.map(function (d) {
+        return d.maximumVehicleHeight;
+    }));
+    y.domain([0, d3.max(data, function (d) {
+        return d.capacity;
+    })]);
+
+    //append the rectangles for the bar chart
+    barSVG.selectAll(".bar")
+        .data(data)
+        .enter().append("rect")
+        .attr("class", "bar")
+        .attr("x", function (d) {
+            return x(d.maximumVehicleHeight);
+        })
+        .attr("width", x.bandwidth())
+        .attr("y", function (d) {
+            return y(d.capacity);
+        })
+        .attr("height", function (d) {
+            return height - y(d.capacity);
+        });
+
+    //add the x Axis
+    barSVG.append("g")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x));
+
+    //add the y Axis
+    barSVG.append("g")
+        .call(d3.axisLeft(y));
 }
