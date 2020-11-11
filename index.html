@@ -7,7 +7,8 @@
     <title>D3 thing</title>
     <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./style/style.css">
-    <script src="https://d3js.org/d3.v4.js"></script>
+    <script src="https://d3js.org/d3.v6.js"></script>
+    <script src="https://unpkg.com/d3-simple-slider"></script>
     <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
     <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
     <script src="https://d3js.org/d3-array.v2.min.js"></script>
@@ -17,14 +18,25 @@
 <body>
     <article>
         <h1>Parkeergarages op vakantie</h1>
-        <p>je hebt het allemaal wel eens, pas ik nou wel of niet in die perkeergarage? Vaak als je met een dakkoffer
+        <p>Je hebt het allemaal wel eens, pas ik nou wel of niet in die perkeergarage? Vaak als je met een dakkoffer
             rijd weet je niet precies waar je wel en niet terecht kan. Hoe het zit met de hoogtes van parkeergarages
             voor vakantiegangers heb ik hier even kort duidelijk gemaakt.</p>
         <svg id="bar"></svg>
-        <p>Wil je weten in welke parkeergarages jij kan parkeren in Nederland? Belijk dit dan snel in de map hieronder!</p>
-        <svg id="map">
-            <g></g>
-        </svg>
+        <p>Wil je weten in welke parkeergarages jij kan parkeren in Nederland? Belijk dit dan snel in de map hieronder!
+        </p>
+
+
+
+        <div class="svgContainer">
+            <div class="sliderContainer">
+                <p id="value">150</p>
+                <p class="metric">CM</p>
+                <div id="slider"></div>
+            </div>
+            <svg id="map">
+                <g></g>
+            </svg>
+        </div>
     </article>
 
     <script type="module" src="script.js"></script>

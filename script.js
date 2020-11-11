@@ -1,6 +1,31 @@
 //local server command: python -m http.server
-import { endpoint, endpoint2, selectedColumn, selectedColumn2 } from './modules/endpoint.js';
-import { compare } from './modules/array.js';
+//import modules
+import {
+    endpoint,
+    endpoint2,
+    selectedColumn,
+} from './modules/endpoint.js';
+import {
+    compare
+} from './modules/array.js';
+import {
+    mapSVG,
+    mapProjection,
+    mapPath,
+    tooltip
+} from './modules/mapConst.js';
+import {
+    height,
+    x,
+    y,
+    barSVG,
+    barTooltip
+} from './modules/barConst.js';
+import {
+    getData,
+    filterData,
+    filterObjectValue
+} from './modules/filterFunctions.js';
 
 let data1 = getData(endpoint) //calls function getData with API link
     .then(result => { //only continues when data is fetched
@@ -39,52 +64,40 @@ let cleanedDataObjects = compare(data1, data2) //calls compare function, and log
     .then(result => {
         // console.log(result);
         mapThings(result)
+        barchart(result)
         return result;
     });
 
-
-function getData(url) {
-    return fetch(url); //fetches data from API url
-}
-
-function filterData(dataArray, key) {
-    return dataArray.map(item => item[key]); //filters column data from array
-}
-
-function filterObjectValue(dataArray, key) {
-    return dataArray.filter(item => item[key] > 0); //returns only objects with a key-value higher than 0
-}
-
-function filterObjectName(dataArray, key) {
-    return dataArray.filter(item => item[key] === 'GARAGEP'); //returns only objects with a key-value higher than 0
-}
-
 //D3 code
-let mapSVG = d3.select("#map");
-
-// Map and projection
-let mapProjection = d3.geoMercator()
-    .center([5.66, 52.40]) // GPS of location to zoom on
-    .scale(7500) // This is like the zoom
-// .translate([ width/2, height/2 ])
-
-let mapPath = d3.geoPath(mapProjection)
-
 // Load external data and boot
-d3.json("https://gist.githubusercontent.com/larsbouwens/1afef9beb0c3df0e4b24/raw/5ed7eb4517eee5737a4cb4551558e769ed8da41a/nl.json", function (data) {
+function loadMap() {
+    d3.json("https://gist.githubusercontent.com/larsbouwens/1afef9beb0c3df0e4b24/raw/5ed7eb4517eee5737a4cb4551558e769ed8da41a/nl.json").then(data => {
 
-    // Draw the map
-    mapSVG.select("g")
-        .selectAll("path")
-        .data(data.features)
-        .enter().append("path")
-        .attr("d", mapPath)
-})
+        // Draw the map
+        mapSVG.selectAll("g")
+            .selectAll("path")
+            .data(data.features)
+            .enter().append("path")
+            .attr("d", mapPath)
+    })
+
+    mapSVG.call(d3.zoom()
+        .scaleExtent([1, 4]) //maximum zooming levels
+        .translateExtent([ //maximum panning levels
+            [-200, -200],
+            [1000, 800]
+        ])
+        .on('zoom', onZoom)); //calls function onZoom
+}
+
+window.onload = loadMap(); //loads the map after the page is loaded
 
 function mapThings(object) { //gets called when data is ready
+
     mapSVG.selectAll('circle')
         .data(object)
         .enter().append('circle')
+        // .attr('fill', d => {})
         .attr('cx', d => {
             return mapProjection(d.location)[0];
         }) //adds location from data object
@@ -94,7 +107,11 @@ function mapThings(object) { //gets called when data is ready
         .attr("r", d => {
             return calculateRadius(d.capacity);
         }) //calls function to calculate radius
+        .on("mouseover", mouseOverMap) //calls function when hovering
+        .on("mouseout", mouseOutMap) //calls function when not hovering
 }
+
+
 
 function calculateRadius(capacity) { //function that calculates the radius of a bubble on the bubble map
     let radius;
@@ -108,4 +125,132 @@ function calculateRadius(capacity) { //function that calculates the radius of a 
         radius = 4;
     }
     return (radius);
+}
+
+function mouseOverMap(event, d) { //add interactivity
+
+    tooltip.transition() //set transition for tooltip
+        .duration('50')
+        .style('opacity', 1)
+
+    tooltip.html(d.areaDesc); //text of the tooltip
+
+    tooltip.style('left', (event.pageX) + 'px') //position of the tooltip
+        .style('top', (event.pageY + 10) + 'px')
+        .attr('class', 'focus');
+}
+
+function mouseOutMap() { //sets hover back when not hovering
+
+    tooltip.transition() //hides tooltips
+        .duration('50')
+        .style("opacity", 0);
+}
+
+function onZoom(event, d) {
+    mapSVG.attr('transform', event.transform);
+}
+
+var slider = d3
+    .sliderVertical()
+    .min(150)
+    .max(300)
+    .step(5)
+    .width(300)
+    .displayValue(false)
+
+d3.select('#slider')
+    .append('svg')
+    .append('g')
+    .attr('transform', 'translate(45,30)')
+    .call(slider);
+
+let value = slider.on('onchange', (val) => {
+    d3.select('#value').text(val);
+    circleColor(val)
+    console.log(val)
+});
+
+
+function circleColor(val) {
+    if (val > 200) {
+        mapSVG.selectAll('circle')
+            .style('fill', 'red')
+    } else {
+        mapSVG.selectAll('circle')
+            .style('fill', 'blue')
+    }
+}
+
+
+
+//code for bar chart
+//gets called when the data is collected
+function barchart(data) {
+
+    let heights = filterData(data, 'maximumVehicleHeight');
+    let barData = mergeValues(heights);
+
+    //scale the range of the data in the domains
+    x.domain(barData.map(function (d) {
+        return d.name;
+    }));
+    y.domain([0, d3.max(barData, function (d) {
+        return d.amount;
+    })]);
+
+    //append the bars for the bar chart
+    barSVG.selectAll(".bar")
+        .data(barData)
+        .enter().append("rect")
+        .attr("class", "bar")
+        .attr("x", function (d) {
+            return x(d.name);
+        })
+        .attr("width", x.bandwidth())
+        .attr("y", function (d) {
+            return y(d.amount);
+        })
+        .attr("height", function (d) {
+            return height - y(d.amount);
+        })
+        .on("mouseover", mouseOverBar) //calls function when hovering
+        .on("mouseout", mouseOutBar) //calls function when not hovering
+
+    //add the x axis
+    barSVG.append("g")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x));
+
+    //add the y axis
+    barSVG.append("g")
+        .call(d3.axisLeft(y));
+}
+
+function mergeValues(data) {
+    return d3.groups(data, d => d)
+        .map(([name, group]) => ({
+            name,
+            amount: d3.rollup(group, d => d).length
+        }))
+}
+
+function mouseOverBar(event, d) { //add interactivity
+
+    barTooltip.transition() //set transition for tooltip
+        .duration('50')
+        .style('opacity', 1)
+
+    barTooltip.html(d.amount + ' parkeergarages met <br> een hoogte van ' + d.name); //text of the tooltip
+
+    barTooltip.style('left', (event.pageX) + 'px') //position of the tooltip
+        .style('top', (event.pageY + 10) + 'px')
+        .attr('class', 'focus');
+}
+
+function mouseOutBar() { //sets hover back when not hovering
+
+    barTooltip.transition() //hides tooltips
+        .duration('50')
+        .style("opacity", 0);
 }
