@@ -19,3 +19,5 @@ Simple tooltips in v6. (2020, 14 september). bl.ocks.org. https://bl.ocks.org/d3
 Walley, J. (z.d.). johnwalley/d3-simple-slider. D3 simple slider. Geraadpleegd op 10 november 2020, van https://github.com/johnwalley/d3-simple-slider
 
 Simple bar graph in v6. (2020, 12 september). bl.ocks.org. https://bl.ocks.org/d3noob/d805555ee892425cc582dcb245d4fc59
+
+Bostock, M. (2020, 15 juli). Merging Duplicate Values. Observable. https://observablehq.com/@d3/merging-duplicate-values

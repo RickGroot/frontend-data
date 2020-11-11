@@ -9,7 +9,6 @@ article {
     max-width: 1200px;
     min-width: 500px;
     margin: 0 auto;
-    border: 2px solid black;
 }
 
 h1 {
@@ -19,14 +18,20 @@ h1 {
 }
 
 #bar {
-    height: 600px;
+    height: 400px;
     width: 60vw;
     max-width: 1200px;
     min-width: 500px;
 }
 
-#bar g {
-    transform: translate(100, 20);
+rect.bar {
+    fill: #656565;
+    border: 2px solid black;
+}
+
+rect.bar:hover {
+    fill:#292a2a;
+    transition: all .3s;
 }
 
 
@@ -41,7 +46,7 @@ h1 {
     width: 60vw;
     max-width: 1200px;
     min-width: 500px;
-    background-color: oldlace;
+    background-color: #2c323b;
     overflow: hidden;
     position: relative;
 }
@@ -60,7 +65,14 @@ h1 {
 #value {
     color: white;
     font-weight: 600;
-    width: 30px;
+    width: 10px;
+    margin: auto 10px;
+}
+
+.metric {
+    color: white;
+    font-weight: 500;
+    width: auto;
     margin: auto 10px;
 }
 
@@ -79,14 +91,21 @@ svg#map {
 }
 
 #map path {
-    fill: grey;
-    stroke: black;
+    fill: #292a2a;
+    stroke: #656565;
 }
 
 #map circle {
-    fill: rgb(56, 232, 255);
+    /* fill: rgb(56, 232, 255); */
     stroke: rgb(39, 39, 39);
     stroke-width: 1;
+    opacity: .7;
+}
+
+#map circle:hover {
+    fill: white;
+    opacity: 1;
+    transition: all .2s;
 }
 
 .focus {

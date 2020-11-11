@@ -30,6 +30,7 @@
         <div class="svgContainer">
             <div class="sliderContainer">
                 <p id="value">150</p>
+                <p class="metric">CM</p>
                 <div id="slider"></div>
             </div>
             <svg id="map">
@@ -39,24 +40,6 @@
     </article>
 
     <script type="module" src="script.js"></script>
-    <script>
-        var slider = d3
-            .sliderVertical()
-            .min(150)
-            .max(300)
-            .step(5)
-            .width(300)
-            .displayValue(false)
-            .on('onchange', (val) => {
-                d3.select('#value').text(val);
-            });
-
-        d3.select('#slider')
-            .append('svg')
-            .append('g')
-            .attr('transform', 'translate(45,30)')
-            .call(slider);
-    </script>
 </body>
 
 </html>

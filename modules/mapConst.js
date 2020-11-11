@@ -3,7 +3,7 @@ let mapSVG = d3.select("#map");
 // Map and projection
 let mapProjection = d3.geoMercator()
     .center([5.66, 52.40]) // GPS of location to zoom on
-    .scale(7500) // This is like the zoom
+    .scale(7000) // This is like the zoom
 // .translate([ width/2, height/2 ])
 
 let mapPath = d3.geoPath().projection(mapProjection)
