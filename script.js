@@ -90,6 +90,7 @@ function loadMap() {
         .on('zoom', onZoom)); //calls function onZoom
 }
 
+
 window.onload = loadMap(); //loads the map after the page is loaded
 
 function mapThings(object) { //gets called when data is ready
@@ -167,19 +168,37 @@ d3.select('#slider')
 
 let value = slider.on('onchange', (val) => {
     d3.select('#value').text(val);
-    circleColor(val)
+    update(val)
     console.log(val)
 });
 
 
-function circleColor(val) {
-    if (val > 200) {
-        mapSVG.selectAll('circle')
-            .style('fill', 'red')
-    } else {
-        mapSVG.selectAll('circle')
-            .style('fill', 'blue')
-    }
+// function circleColor(val) {
+//     if (val > 200) {
+//         mapSVG.selectAll('circle')
+//             .style('fill', 'red')
+//     } else {
+//         mapSVG.selectAll('circle')
+//             .style('fill', 'blue')
+//     }
+// }
+
+function update(data) {
+    // console.log(mapSVG.selectAll('circle')
+    //     .data()
+    //     .join('circle')
+    //     .attr('fill', 'purple'))
+
+    const circles = mapSVG.selectAll('circle')
+    const tester = circles.data(eval(circles))
+    circles.join(
+        enter => {
+            return enter.append('circle').style('fill', 'cyan')
+        },
+        update => {return update},
+    )
+    console.log(tester)
+    console.log('hi')
 }
 
 
