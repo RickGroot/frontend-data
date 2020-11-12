@@ -84,7 +84,7 @@ window.onload = loadMap(); //loads the map after the page is loaded
 function mapThings(object) { //gets called when data is ready
 
     //draw the circles on the map
-    mapSVG.select('#NL').selectAll('circle')
+    mapSVG.select('#circles').selectAll('circle')
         .data(object)
         .enter().append('circle')
         .attr('class', d => {
