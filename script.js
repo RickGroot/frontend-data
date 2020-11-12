@@ -1,4 +1,3 @@
-//local server command: python -m http.server
 //import modules
 import {
     endpoint,
@@ -18,7 +17,6 @@ import {
 } from './modules/mapConst.js';
 import {
     height,
-    width,
     x,
     y,
     barSVG,
@@ -53,7 +51,6 @@ let data2 = getData(endpoint2) //calls function getData with API link
 //all the clean data
 let cleanedDataObjects = compare(data1, data2) //calls compare function, and logs result when ready
     .then(result => { //fires when data is collected
-        // console.log(result);
         mapThings(result); //calls function that puts circles on the map
         barchart(result); //calls function that places barchart
         return result;
@@ -64,7 +61,7 @@ let cleanedDataObjects = compare(data1, data2) //calls compare function, and log
 function loadMap() {
     d3.json("https://gist.githubusercontent.com/larsbouwens/1afef9beb0c3df0e4b24/raw/5ed7eb4517eee5737a4cb4551558e769ed8da41a/nl.json").then(data => {
 
-        // Draw the map
+        //draw the map
         mapSVG.selectAll("#paths")
             .selectAll("path")
             .data(data.features)
@@ -86,6 +83,7 @@ window.onload = loadMap(); //loads the map after the page is loaded
 
 function mapThings(object) { //gets called when data is ready
 
+    //draw the circles on the map
     mapSVG.select('svg g').selectAll('circle')
         .data(object)
         .enter().append('circle')
@@ -107,22 +105,17 @@ function mapThings(object) { //gets called when data is ready
 
 //when mouse is on circle
 function mouseOverMap(event, d) { //add interactivity
-    tooltip.transition() //set transition for tooltip
-        .duration('50')
-        .style('opacity', 1)
 
     tooltip.html(d.areaDesc + '<br> Capacity: ' + d.capacity); //text of the tooltip
 
     tooltip.style('left', (event.pageX) + 'px') //position of the tooltip
         .style('top', (event.pageY + 10) + 'px')
-        .attr('class', 'focus');
+        .attr('class', 'focus'); //adds class for styling
 }
 
 //when mouse is not on circle
 function mouseOutMap() { //sets hover back when not hovering
-    tooltip.transition() //hides tooltips
-        .duration('50')
-        .style("opacity", 0);
+    tooltip.attr('class', 'unfocus'); //adds class to hide tooltip
 }
 
 //zoom with d3
@@ -202,22 +195,17 @@ function mergeValues(data) {
         }))
 }
 
+//when mouse is on a bar
 function mouseOverBar(event, d) { //add interactivity
 
-    barTooltip.transition() //set transition for tooltip
-        .duration('50')
-        .style('opacity', 1)
-
-    barTooltip.html(d.amount + ' parkeergarages met <br> een hoogte van ' + d.name); //text of the tooltip
+    barTooltip.html(d.amount + ' parkeergarages met <br> een hoogte van ' + d.name + 'cm'); //text of the tooltip
 
     barTooltip.style('left', (event.pageX) + 'px') //position of the tooltip
         .style('top', (event.pageY + 10) + 'px')
-        .attr('class', 'focus');
+        .attr('class', 'focus'); //sets class that shows tooltip
 }
 
+//when mouse is off a bar
 function mouseOutBar() { //sets hover back when not hovering
-
-    barTooltip.transition() //hides tooltips
-        .duration('50')
-        .style("opacity", 0);
+    barTooltip.attr('class', 'unfocus'); //sets class for not showing tooltip
 }
