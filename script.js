@@ -18,6 +18,7 @@ import {
 } from './modules/mapConst.js';
 import {
     height,
+    width,
     x,
     y,
     barSVG,
@@ -64,7 +65,7 @@ function loadMap() {
     d3.json("https://gist.githubusercontent.com/larsbouwens/1afef9beb0c3df0e4b24/raw/5ed7eb4517eee5737a4cb4551558e769ed8da41a/nl.json").then(data => {
 
         // Draw the map
-        mapSVG.selectAll("g")
+        mapSVG.selectAll("#paths")
             .selectAll("path")
             .data(data.features)
             .enter().append("path")
@@ -85,7 +86,7 @@ window.onload = loadMap(); //loads the map after the page is loaded
 
 function mapThings(object) { //gets called when data is ready
 
-    mapSVG.selectAll('circle')
+    mapSVG.select('svg g').selectAll('circle')
         .data(object)
         .enter().append('circle')
         .attr('class', d => {
@@ -125,8 +126,8 @@ function mouseOutMap() { //sets hover back when not hovering
 }
 
 //zoom with d3
-function onZoom(event, d) {
-    mapSVG.attr('transform', event.transform);
+function onZoom(event) {
+    mapSVG.select('svg g').attr('transform', event.transform);
 }
 
 
@@ -159,7 +160,7 @@ function barchart(data) {
     //scale the range of the data in the domains
     x.domain(barData.map(function (d) {
         return d.name; //sets names on x-axis
-    }));
+    }).sort(d3.ascending));
     y.domain([0, d3.max(barData, function (d) {
         return d.amount; //sets max value of y-axis based on data
     })]);

@@ -2,7 +2,7 @@ let mapSVG = d3.select("#map");
 
 // Map and projection
 let mapProjection = d3.geoMercator()
-    .center([5.66, 52.40]) // GPS of location to zoom on
+    .center([6.36, 52.4]) // GPS of location to zoom on
     .scale(7000) // This is like the zoom
 // .translate([ width/2, height/2 ])
 
@@ -14,8 +14,8 @@ let tooltip = d3.select('body')
 
 var slider = d3
     .sliderVertical()
-    .min(150)
-    .max(300)
+    .min(170)
+    .max(255)
     .step(5)
     .width(300)
     .displayValue(false)
