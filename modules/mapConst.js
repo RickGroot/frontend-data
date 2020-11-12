@@ -12,9 +12,39 @@ let tooltip = d3.select('body')
     .append('div')
     .attr('class', 'unfocus')
 
+var slider = d3
+    .sliderVertical()
+    .min(150)
+    .max(300)
+    .step(5)
+    .width(300)
+    .displayValue(false)
+
+d3.select('#slider')
+    .append('svg')
+    .append('g')
+    .attr('transform', 'translate(45,30)')
+    .call(slider);
+
+function calculateRadius(capacity) { //function that calculates the radius of a bubble on the bubble map
+    let radius;
+    if (capacity > 1000) {
+        radius = 10;
+    } else if (capacity < 1000 && capacity > 700) {
+        radius = 8;
+    } else if (capacity < 700 && capacity > 500) {
+        radius = 6;
+    } else {
+        radius = 4;
+    }
+    return (radius);
+}
+
 export {
     mapSVG,
     mapProjection,
     mapPath,
-    tooltip
+    tooltip,
+    slider,
+    calculateRadius
 };
