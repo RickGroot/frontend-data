@@ -161,4 +161,19 @@ h2 {
         max-width: 550px;
         min-width: auto;
     }
+
+    h2 {
+        height: 40px;
+        margin: 0;
+    }
+
+    .mapTitle {
+        top: 50px;
+        margin-left: 2vw;
+    }
+
+    .sliderContainer {
+        right: -2vw;
+        transform: scale(0.7);
+    }
 }
