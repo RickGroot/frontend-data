@@ -120,7 +120,7 @@ function mouseOutMap() { //sets hover back when not hovering
 
 //zoom with d3
 function onZoom(event) {
-    mapSVG.select('svg g').attr('transform', event.transform);
+    mapSVG.selectAll('svg g').attr('transform', event.transform);
 }
 
 
